@@ -1,0 +1,38 @@
+services:
+  backend:
+    build: ./backend
+    container_name: todo-backend
+    #ports:
+     # - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/todos
+    depends_on:
+      - mongo
+    networks:
+      - todo-net
+
+  frontend:
+    build: ./frontend
+    container_name: todo-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - todo-net
+
+  mongo:
+    image: mongo:6
+    container_name: todo-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - todo-net
+
+volumes:
+  mongo-data:
+
+networks:
+  todo-net:
